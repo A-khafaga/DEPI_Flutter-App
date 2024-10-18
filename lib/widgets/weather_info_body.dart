@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/cubits/get_weather_cubit/get_weather_cubit.dart';
-import 'package:weather_app/main.dart';
+import 'package:intl/intl.dart';
+import 'package:weather_app/core/utils/images_date.dart';
 import 'package:weather_app/models/weather_model.dart';
 
 class WeatherInfoBody extends StatefulWidget {
-  const WeatherInfoBody({Key? key, required this.weather}) : super(key: key);
+  const WeatherInfoBody({super.key, required this.weather});
 
   final WeatherModel weather;
 
@@ -16,94 +15,52 @@ class WeatherInfoBody extends StatefulWidget {
 class _WeatherInfoBodyState extends State<WeatherInfoBody> {
   @override
   Widget build(BuildContext context) {
-    WeatherModel weatherModel =
-        BlocProvider.of<GetWeatherCubit>(context).weatherModel!;
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-        getThemeColor(weatherModel.weatherCondition),
-        getThemeColor(weatherModel.weatherCondition)[300]!,
-        getThemeColor(weatherModel.weatherCondition)[50]!
-      ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              weatherModel.cityName,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
-              ),
-            ),
-            const SizedBox(
-              height: 32,
-            ),
-            Text(
-              'last update at :  ${weatherModel.date.hour} : ${weatherModel.date.minute}',
-              style: const TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            const SizedBox(
-              height: 32,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final model = widget.weather;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 130),
+        Image.asset(getWeatherImage(model.weatherCondition)),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 50),
+          width: 350,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white30,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
               children: [
-                Image.network(
-                  weatherModel.image!,
-                  scale: 0.4,
+                Text(
+                  "Today, ${DateFormat('d MMMM').format(model.date)}",
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "${model.temp.ceil()}°",
+                  style: const TextStyle(color: Colors.white, fontSize: 100),
                 ),
                 Text(
-                  weatherModel.temp.ceil().toString() + ' °C',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),
+                  model.weatherCondition,
+                  style: const TextStyle(color: Colors.white),
                 ),
-                Column(
-                  children: [
-                    Text(
-                      'Max Temp : ' +
-                          weatherModel.maxTemp.ceil().toString() +
-                          ' °C',
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      'Min Temp : ' +
-                          weatherModel.minTemp.ceil().toString() +
-                          ' °C',
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 25),
+                Text(
+                  "Wind:\t ${model.humidity} km/h",
+                  style: const TextStyle(color: Colors.white),
                 ),
+                const SizedBox(height: 10),
+                Text(
+                  "Humidity:\t ${model.humidity}%",
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
-            const SizedBox(
-              height: 32,
-            ),
-            Text(
-              weatherModel.weatherCondition,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-              ),
-            ),
-            // const SizedBox(height: 32),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       weatherModel.image;
-            //     },
-            //     child: const Text('this week forcast'))
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

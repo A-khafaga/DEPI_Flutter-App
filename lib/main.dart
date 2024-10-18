@@ -19,10 +19,10 @@ class _WeatherAppState extends State<WeatherApp> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => GetWeatherCubit(),
-        child: Builder(
-          builder: (context) => BlocBuilder<GetWeatherCubit, WeatherState>(
-              builder: (context, state) {
+      create: (context) => GetWeatherCubit(),
+      child: Builder(
+        builder: (context) => BlocBuilder<GetWeatherCubit, WeatherState>(
+          builder: (context, state) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
@@ -32,8 +32,10 @@ class _WeatherAppState extends State<WeatherApp> {
                           ?.weatherCondition)),
               home: const HomeView(),
             );
-          }),
-        ));
+          },
+        ),
+      ),
+    );
   }
 }
 
@@ -61,6 +63,6 @@ MaterialColor getThemeColor(String? condition) {
     case 'Light sleet':
       return Colors.orange;
     default:
-      return Colors.blue; // Default color for unknown conditions
+      return Colors.blue;
   }
 }

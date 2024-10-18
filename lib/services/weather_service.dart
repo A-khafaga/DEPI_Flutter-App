@@ -21,7 +21,26 @@ class WeatherService {
       throw Exception(errorMessage);
     } catch (e) {
       log(e.toString());
-      throw Exception('try again later');
+      throw Exception('Try again later');
+    }
+  }
+
+  Future<WeatherModel> getCurrentWeatherByCoordinates({
+    required double lat,
+    required double lon,
+  }) async {
+    try {
+      Response response = await Dio().get(
+        '$baseUrl/forecast.json?key=$apiKey&q=$lat,$lon&days=1',
+      );
+      return WeatherModel.fromJson(response.data);
+    } on DioException catch (e) {
+      final String errorMessage = e.response?.data['error']['message'] ??
+          'Oops, there was an error, try again later';
+      throw Exception(errorMessage);
+    } catch (e) {
+      log(e.toString());
+      throw Exception('Try again later');
     }
   }
 }
