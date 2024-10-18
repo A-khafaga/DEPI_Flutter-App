@@ -13,6 +13,7 @@ class WeatherInfoBody extends StatefulWidget {
 }
 
 class _WeatherInfoBodyState extends State<WeatherInfoBody> {
+  bool isCelsius = true;
   @override
   Widget build(BuildContext context) {
     final model = widget.weather;
@@ -38,14 +39,29 @@ class _WeatherInfoBodyState extends State<WeatherInfoBody> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "${model.temp.ceil()}°",
+                  isCelsiusText(model.temp),
                   style: const TextStyle(color: Colors.white, fontSize: 100),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Min: ' "${isCelsiusText(model.minTemp)}",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(width: 60),
+                    Text(
+                      'Max: ' "${isCelsiusText(model.maxTemp)}",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 Text(
                   model.weatherCondition,
                   style: const TextStyle(color: Colors.white),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 10),
                 Text(
                   "Wind:\t ${model.humidity} km/h",
                   style: const TextStyle(color: Colors.white),
@@ -55,12 +71,49 @@ class _WeatherInfoBodyState extends State<WeatherInfoBody> {
                   "Humidity:\t ${model.humidity}%",
                   style: const TextStyle(color: Colors.white),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isCelsius
+                        ? Colors.lightBlue.shade400 // Blueish tone for °C
+                        : Colors.orange.shade400, // Warm tone for °F
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 24),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 5,
+                    shadowColor: Colors.black26,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isCelsius = !isCelsius;
+                    });
+                  },
+                  child: Text(
+                    isCelsius ? 'Convert to °F' : 'Convert to °C',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ],
     );
+  }
+
+  double celsiusToFahrenheit(double celsius) {
+    return (celsius * 9 / 5) + 32;
+  }
+
+  String isCelsiusText(double temperature) {
+    return isCelsius
+        ? "${temperature.ceil()}°C"
+        : "${celsiusToFahrenheit(temperature).ceil()}°F";
   }
 }
