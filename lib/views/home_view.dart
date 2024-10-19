@@ -1,10 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather_app/core/custom/custom_app_bar.dart';
 import 'package:weather_app/core/custom/custom_gradient_background.dart';
 import 'package:weather_app/cubits/get_weather_cubit/get_weather_cubit.dart';
 import 'package:weather_app/cubits/get_weather_cubit/get_weather_states.dart';
+import 'package:weather_app/models/notification_model.dart';
+import 'package:weather_app/providers/city_name_provider.dart';
+import 'package:weather_app/providers/notification_proivder.dart';
 import 'package:weather_app/views/forecast_report_view.dart';
 import 'package:weather_app/widgets/no_weather_body.dart';
 import 'package:weather_app/widgets/weather_info_body.dart';
@@ -19,17 +23,29 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   String cityName = "";
+  List<NotificationModel>? notifications;
+  late NotificationProivder notificationProivder;
+  late CityNameProvider cityNameProvider;
+
+  @override
   @override
   void initState() {
     super.initState();
+
+    // _fetchNotifications();
     BlocProvider.of<GetWeatherCubit>(context).getWeather();
   }
 
   @override
   Widget build(BuildContext context) {
+    notificationProivder = Provider.of<NotificationProivder>(context);
+    notifications = notificationProivder.notifications;
+    cityNameProvider = Provider.of<CityNameProvider>(context);
+
+    print('notifiiii ${notifications?.length ?? 0}');
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: customAppBar(context, cityName: cityName),
+      appBar: customAppBar(context, notifications: notifications ?? []),
       body: CustomGradientBackground(
         child: BlocBuilder<GetWeatherCubit, WeatherState>(
           builder: (context, state) {
@@ -37,10 +53,15 @@ class _HomeViewState extends State<HomeView> {
               return const Center(child: CircularProgressIndicator());
             } else if (state is WeatherLoadedState) {
               cityName = state.weatherModel.cityName;
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                setState(() {});
-              });
-              return WeatherInfoBody(weather: state.weatherModel);
+              if (cityNameProvider.cityName != cityName) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  cityNameProvider.setCityName(cityName);
+                });
+              }
+
+              return WeatherInfoBody(
+                weather: state.weatherModel,
+              );
             } else if (state is WeatherFailureState) {
               log(state.errMessage);
               return Center(child: Text(state.errMessage));

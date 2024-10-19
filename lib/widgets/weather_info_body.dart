@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/core/utils/images_date.dart';
+import 'package:weather_app/models/notification_model.dart';
 import 'package:weather_app/models/weather_model.dart';
 
 class WeatherInfoBody extends StatefulWidget {
-  const WeatherInfoBody({super.key, required this.weather});
+  WeatherInfoBody({super.key, required this.weather, this.notifications});
 
   final WeatherModel weather;
+  List<NotificationModel>? notifications;
 
   @override
   State<WeatherInfoBody> createState() => _WeatherInfoBodyState();
