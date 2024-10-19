@@ -5,7 +5,7 @@ class ImagesDate {
   static const String rain = "$_mainPath/rainy.png";
   static const String snow = "$_mainPath/snow.png";
   static const String thunderstorm = "$_mainPath/thunderstorm.png";
-  static const String map = "$_mainPath/map.png";
+  static const String search = "$_mainPath/search.png";
 }
 
 String getWeatherImage(String condition) {

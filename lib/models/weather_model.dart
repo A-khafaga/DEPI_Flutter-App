@@ -31,4 +31,16 @@ class WeatherModel {
       humidity: json['current']['humidity'],
     );
   }
+
+  factory WeatherModel.fromJsonForecast(Map<String, dynamic> json) {
+    return WeatherModel(
+      cityName: json['location']?['name'] ?? 'Unknown Location',
+      date: DateTime.parse(json['date'] ?? DateTime.now().toString()),
+      temp: (json['day']?['avgtemp_c'] ?? 0.0).toDouble(),
+      maxTemp: (json['day']?['maxtemp_c'] ?? 0.0).toDouble(),
+      minTemp: (json['day']?['mintemp_c'] ?? 0.0).toDouble(),
+      weatherCondition: json['day']?['condition']?['text'] ?? 'Unknown',
+      humidity: (json['day']?['avghumidity'] ?? 0).toInt(),
+    );
+  }
 }
