@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class NotificationModel {
   String title, description;
   int? id;

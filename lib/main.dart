@@ -55,7 +55,7 @@ void main() async {
           create: (_) => CityNameProvider(),
         ),
       ],
-      child: WeatherApp(),
+      child: const WeatherApp(),
     ),
   );
 }
@@ -88,46 +88,13 @@ class _WeatherAppState extends State<WeatherApp> {
       child: Builder(
         builder: (context) => BlocBuilder<GetWeatherCubit, WeatherState>(
           builder: (context, state) {
-            return MaterialApp(
+            return const MaterialApp(
               debugShowCheckedModeBanner: false,
-              theme: ThemeData(
-                  primarySwatch: getThemeColor(
-                      BlocProvider.of<GetWeatherCubit>(context)
-                          .weatherModel
-                          ?.weatherCondition)),
-              home: const HomeView(),
+              home: HomeView(),
             );
           },
         ),
       ),
     );
-  }
-}
-
-MaterialColor getThemeColor(String? condition) {
-  if (condition == null) {
-    return Colors.cyan;
-  }
-  switch (condition) {
-    case 'Sunny':
-    case 'Clear':
-      return Colors.amber;
-    case 'Cloudy':
-    case 'Partly cloudy':
-    case 'Overcast':
-      return Colors.grey;
-    case 'Rain':
-    case 'Showers':
-      return Colors.brown;
-    case 'Thunderstorm':
-      return Colors.deepPurple;
-    case 'Snow':
-      return Colors.green;
-    case 'Fog':
-      return Colors.blueGrey;
-    case 'Light sleet':
-      return Colors.orange;
-    default:
-      return Colors.blue;
   }
 }

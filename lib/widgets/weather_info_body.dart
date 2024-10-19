@@ -5,10 +5,10 @@ import 'package:weather_app/models/notification_model.dart';
 import 'package:weather_app/models/weather_model.dart';
 
 class WeatherInfoBody extends StatefulWidget {
-  WeatherInfoBody({super.key, required this.weather, this.notifications});
+  const WeatherInfoBody({super.key, required this.weather, this.notifications});
 
   final WeatherModel weather;
-  List<NotificationModel>? notifications;
+  final List<NotificationModel>? notifications;
 
   @override
   State<WeatherInfoBody> createState() => _WeatherInfoBodyState();
